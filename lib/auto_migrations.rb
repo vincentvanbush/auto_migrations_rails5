@@ -1,5 +1,7 @@
+# load rake
+Dir[File.join(File.dirname(__FILE__),'tasks/**/*.rake')].each { |f| load f } if defined?(Rake)
+
 module AutoMigrations
-  
   def self.run
     # Turn off schema_info code for auto-migration
     class << ActiveRecord::Schema
@@ -175,5 +177,6 @@ module AutoMigrations
     end
   
   end
-
 end
+
+ActiveRecord::Migration.send :include, AutoMigrations
