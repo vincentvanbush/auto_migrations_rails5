@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "auto_migrations"
-  s.version = "1.0.0"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["subicura (originally by PJ Hyett)"]
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "auto_migrations.gemspec",
     "init.rb",
     "lib/auto_migrations.rb",
     "lib/tasks/auto_migrations_tasks.rake",
