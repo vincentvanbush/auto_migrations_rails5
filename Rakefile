@@ -1,6 +1,21 @@
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
+
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "auto_migrations"
+    gemspec.summary = "auto database migration."
+    gemspec.description = "auto database migration."
+    gemspec.email = "subicura@subicura.com"
+    gemspec.homepage = "http://github.com/subicura/auto_migrations"
+    gemspec.authors = ["subicura (originally by PJ Hyett)"]
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install jeweler -s http://gemcutter.org"
+end
 
 desc 'Default: run unit tests.'
 task :default => :test
