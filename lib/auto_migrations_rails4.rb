@@ -9,29 +9,29 @@ module AutoMigrations
       attr_accessor :version
       def define(info={}, &block) @version = Time.now.utc.strftime("%Y%m%d%H%M%S"); instance_eval(&block) end
     end
-  
+
     load(File.join(Rails.root, 'db', 'schema.rb'))
     ActiveRecord::Migration.drop_unused_tables
     ActiveRecord::Migration.drop_unused_indexes
     ActiveRecord::Migration.update_schema_version(ActiveRecord::Schema.version) if ActiveRecord::Schema.version
-  
+
     class << ActiveRecord::Schema
       alias :define :old_define
     end
   end
-  
+
   def self.schema_to_migration(with_reset = false)
     schema_in = File.read(File.join(Rails.root, "db", "schema.rb"))
     schema_in.gsub!(/#(.)+\n/, '')
     schema_in.sub!(/ActiveRecord::Schema.define(.+)do[ ]?\n/, '')
     schema_in.gsub!(/^/, '  ')
-    schema = "class InitialSchema < ActiveRecord::Migration\n  def self.up\n" 
+    schema = "class InitialSchema < ActiveRecord::Migration\n  def self.up\n"
     schema += "    # We're resetting the migrations database...\n" +
               "    drop_table :schema_migrations\n" +
               "    initialize_schema_migrations_table\n\n" if with_reset
     schema += schema_in
     schema << "\n  def self.down\n"
-    schema << (ActiveRecord::Base.connection.tables - %w(schema_info schema_migrations)).map do |table| 
+    schema << (ActiveRecord::Base.connection.tables - %w(schema_info schema_migrations)).map do |table|
                 "    drop_table :#{table}\n"
               end.join
     schema << "  end\nend\n"
@@ -39,7 +39,7 @@ module AutoMigrations
     File.open(migration_file, "w") { |f| f << schema }
     puts "Migration created at db/migrate/001_initial_schema.rb"
   end
-  
+
   def self.included(base)
     base.extend ClassMethods
     class << base
@@ -50,7 +50,7 @@ module AutoMigrations
   end
 
   module ClassMethods
-  
+
     def method_missing_with_auto_migration(method, *args, &block)
       case method
       when :create_table
@@ -58,29 +58,29 @@ module AutoMigrations
       when :add_index
         auto_add_index(method, *args, &block)
       else
-        method_missing_without_auto_migration(method, *args, &block) 
+        method_missing_without_auto_migration(method, *args, &block)
       end
     end
-    
+
     def auto_create_table(method, *args, &block)
-      table_name = args.shift.to_s    
+      table_name = args.shift.to_s
       options    = args.pop || {}
-        
+
       (self.tables_in_schema ||= []) << table_name
 
       # Table doesn't exist, create it
       unless ActiveRecord::Base.connection.tables.include?(table_name)
         return method_missing_without_auto_migration(method, *[table_name, options], &block)
       end
-    
+
       # Grab database columns
       fields_in_db = ActiveRecord::Base.connection.columns(table_name).inject({}) do |hash, column|
         hash[column.name] = column
         hash
       end
-    
+
       # Grab schema columns (lifted from active_record/connection_adapters/abstract/schema_statements.rb)
-      table_definition = ActiveRecord::ConnectionAdapters::TableDefinition.new(ActiveRecord::Base.connection)
+      table_definition = create_table_definition table_name, options[:temporary], options[:options]
       primary_key = options[:primary_key] || "id"
       table_definition.primary_key(primary_key) unless options[:id] == false
       yield table_definition
@@ -88,7 +88,7 @@ module AutoMigrations
         hash[column.name.to_s] = column
         hash
       end
-    
+
       # Add fields to db new to schema
       (fields_in_schema.keys - fields_in_db.keys).each do |field|
         column  = fields_in_schema[field]
@@ -97,13 +97,13 @@ module AutoMigrations
         options[:null]    = column.null    if !column.null.nil?
         add_column table_name, column.name, column.type.to_sym, options
       end
-    
+
       # Remove fields from db no longer in schema
       (fields_in_db.keys - fields_in_schema.keys & fields_in_db.keys).each do |field|
         column = fields_in_db[field]
         remove_column table_name, column.name
       end
-      
+
       (fields_in_schema.keys & fields_in_db.keys).each do |field|
         if field != primary_key #ActiveRecord::Base.get_primary_key(table_name)
           changed  = false  # flag
@@ -135,13 +135,13 @@ module AutoMigrations
         end
       end
     end
-    
-    def auto_add_index(method, *args, &block)      
+
+    def auto_add_index(method, *args, &block)
       table_name = args.shift.to_s
       fields     = Array(args.shift).map(&:to_s)
       options    = args.shift
 
-      index_name = options[:name] if options  
+      index_name = options[:name] if options
       index_name ||= ActiveRecord::Base.connection.index_name(table_name, :column => fields)
 
       (self.indexes_in_schema ||= []) << index_name
@@ -150,13 +150,13 @@ module AutoMigrations
         method_missing_without_auto_migration(method, *[table_name, fields, options], &block)
       end
     end
-  
+
     def drop_unused_tables
       (ActiveRecord::Base.connection.tables - tables_in_schema - %w(schema_info schema_migrations)).each do |table|
         drop_table table
       end
     end
-    
+
     def drop_unused_indexes
       tables_in_schema.each do |table_name|
         indexes_in_db = ActiveRecord::Base.connection.indexes(table_name).map(&:name)
@@ -165,7 +165,7 @@ module AutoMigrations
         end
       end
     end
-    
+
     def update_schema_version(version)
       if ActiveRecord::Base.connection.tables.include?("schema_migrations")
         ActiveRecord::Base.connection.update("INSERT INTO schema_migrations VALUES ('#{version}')")
@@ -175,7 +175,11 @@ module AutoMigrations
       schema.sub!(/:version => \d+/, ":version => #{version}")
       File.open(schema_file, "w") { |f| f << schema }
     end
-  
+
+    private
+    def create_table_definition(name, temporary, options)
+      ActiveRecord::ConnectionAdapters::TableDefinition.new({}, name, temporary, options)
+    end
   end
 end
 

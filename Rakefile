@@ -5,12 +5,12 @@ require 'rdoc/task'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gemspec|
-    gemspec.name = "auto_migrations"
-    gemspec.summary = "auto database migration."
-    gemspec.description = "auto database migration."
-    gemspec.email = "subicura@subicura.com"
-    gemspec.homepage = "http://github.com/subicura/auto_migrations"
-    gemspec.authors = ["subicura (originally by PJ Hyett)"]
+    gemspec.name = "auto_migrations_rails4"
+    gemspec.summary = "Auto database migration for Rails 4."
+    gemspec.description = "Auto database migration for Rails 4."
+    gemspec.email = "zhangyuanyi@gmail.com"
+    gemspec.homepage = "http://github.com/yzhang/auto_migrations"
+    gemspec.authors = ["yzhang (originally by PJ Hyett)"]
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

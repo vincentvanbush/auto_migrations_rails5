@@ -4,14 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "auto_migrations"
-  s.version = "1.1.0"
+  s.name = "auto_migrations_rails4"
+  s.version = "4.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["subicura (originally by PJ Hyett)"]
-  s.date = "2012-01-25"
-  s.description = "auto database migration."
-  s.email = "subicura@subicura.com"
+  s.authors = ["yzhang (originally by PJ Hyett)"]
+  s.date = "2013-08-10"
+  s.description = "Auto database migration for Rails 4."
+  s.email = "zhangyuanyi@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -28,18 +28,9 @@ Gem::Specification.new do |s|
     "lib/tasks/auto_migrations_tasks.rake",
     "test/auto_migrations_test.rb"
   ]
-  s.homepage = "http://github.com/subicura/auto_migrations"
+  s.homepage = "http://github.com/yzhang/auto_migrations"
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.15"
-  s.summary = "auto database migration."
-
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-    else
-    end
-  else
-  end
+  s.rubygems_version = "2.0.6"
+  s.summary = "Auto database migration for Rails 4."
 end
 
