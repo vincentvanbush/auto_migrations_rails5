@@ -9,7 +9,7 @@ begin
     gemspec.summary = "Auto database migration for Rails 4."
     gemspec.description = "Auto database migration for Rails 4."
     gemspec.email = "zhangyuanyi@gmail.com"
-    gemspec.homepage = "http://github.com/yzhang/auto_migrations"
+    gemspec.homepage = "http://github.com/yzhang/auto_migrations_rails4"
     gemspec.authors = ["yzhang (originally by PJ Hyett)"]
   end
   Jeweler::GemcutterTasks.new
