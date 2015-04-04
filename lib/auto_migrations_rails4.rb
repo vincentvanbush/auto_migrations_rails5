@@ -124,9 +124,16 @@ module AutoMigrations
           # This catches stuff like :null, :precision, etc
           fields_in_schema[field].each_pair do |att,value|
             next if att == :type or att == :base or att == :name # special cases
-            if !value.nil? && value != fields_in_db[field].send(att)
-              new_attr[att] = value
-              changed = true
+            column = fields_in_db[field]
+            if !value.nil?
+              old_value = column.try(att)
+              if att == :default && !old_value.blank? # might be string
+                old_value = column.type_cast_from_database(old_value)
+              end
+              if value != old_value
+                new_attr[att] = value
+                changed = true
+              end
             end
           end
 
