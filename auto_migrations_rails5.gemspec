@@ -4,14 +4,14 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = "auto_migrations_rails4"
+  s.name = "auto_migrations_rails5"
   s.version = "1.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["yzhang (originally by PJ Hyett)"]
-  s.date = "2013-08-10"
-  s.description = "Auto database migration for Rails 4."
-  s.email = "zhangyuanyi@gmail.com"
+  s.authors = ["vincentvanbush (originally by ragav (originally by yzhang (originally by PJ Hyett)))"]
+  s.date = "2016-12-21"
+  s.description = "Auto database migration for Rails 5."
+  s.email = "embed1@gmail.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -22,13 +22,13 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "auto_migrations_rails4.gemspec",
+    "auto_migrations_rails5.gemspec",
     "init.rb",
-    "lib/auto_migrations_rails4.rb",
-    "lib/tasks/auto_migrations_rails4_tasks.rake",
-    "test/auto_migrations_rails4_test.rb"
+    "lib/auto_migrations_rails5.rb",
+    "lib/tasks/auto_migrations_rails5_tasks.rake",
+    "test/auto_migrations_rails5_test.rb"
   ]
-  s.homepage = "http://github.com/yzhang/auto_migrations_rails4"
+  s.homepage = "http://github.com/vincentvanbush/auto_migrations_rails5"
   s.require_paths = ["lib"]
   s.rubygems_version = "2.0.6"
   s.summary = "Auto database migration for Rails 4."

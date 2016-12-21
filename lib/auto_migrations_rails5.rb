@@ -128,7 +128,7 @@ module AutoMigrations
             if !value.nil?
               old_value = column.try(att)
               if att == :default && !old_value.blank? # might be string
-                old_value = column.type_cast_from_database(old_value)
+                old_value = connection.type_cast_from_column(column, old_value)
               end
               if value != old_value
                 new_attr[att] = value
@@ -185,7 +185,7 @@ module AutoMigrations
 
     private
     def create_table_definition(name, temporary, options)
-      ActiveRecord::ConnectionAdapters::TableDefinition.new({}, name, temporary, options)
+      ActiveRecord::ConnectionAdapters::const_get(ActiveRecord::Base.connection.adapter_name)::TableDefinition.new({}, name, temporary, options)
     end
   end
 end
